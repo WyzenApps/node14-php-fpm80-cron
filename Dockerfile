@@ -34,30 +34,31 @@ apt update && apt install -y nodejs yarn
 
 # PHP Packages
 RUN apt-get -y --no-install-recommends install \
-	php-memcached php${PHP_RELEASE}-xml \
-	php${PHP_RELEASE}-mysql \
-	php${PHP_RELEASE}-sqlite3 \
-	php${PHP_RELEASE}-intl \
+	php-memcached \
 	php-pgsql \
 	php-redis \
 	php-gd \
-	php-mbstring \
-	php-yaml \
-	php-xml \
-	php-curl \
-	php-zip \
 	php-ldap \
-	php-json
+	php${PHP_RELEASE}-mysql \
+	php${PHP_RELEASE}-sqlite3 \
+	php${PHP_RELEASE}-intl \
+	php${PHP_RELEASE}-mbstring \
+	php${PHP_RELEASE}-xml \
+	php${PHP_RELEASE}-curl \
+	php${PHP_RELEASE}-zip \
+	php${PHP_RELEASE}-json \
+        && cd /etc/alternatives && ln -sf /usr/bin/php${PHP_RELEASE} php
 
 # CLEAN
 RUN apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
 
 # ADDITIONALS CONFIG
-ADD config/system/alias.sh /etc/profile.d/alias.sh
-RUN cat /etc/profile.d/alias.sh > /etc/bash.bashrc
+COPY ./config/php/php-ini-overrides.ini /etc/php/${PHP_RELEASE}/fpm/conf.d/99-overrides.ini
+COPY ./config/php/php-ini-overrides.ini /etc/php/${PHP_RELEASE}/cli/conf.d/99-overrides.ini
+COPY ./config/system/alias.sh /etc/profile.d/alias.sh
+COPY ./config/system/service_script.conf /src/supervisor/service_script.conf
 
-# Adding supervisor configuration file to container
-ADD config/system/service_script.conf /src/supervisor/service_script.conf
+RUN cat /etc/profile.d/alias.sh > /etc/bash.bashrc
 
 WORKDIR $APPDIR
 
