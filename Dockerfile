@@ -46,7 +46,7 @@ RUN apt-get -y --no-install-recommends install \
 	php${PHP_RELEASE}-xml \
 	php${PHP_RELEASE}-curl \
 	php${PHP_RELEASE}-zip \
-	php${PHP_RELEASE}-json \
+	php-json \
         && cd /etc/alternatives && ln -sf /usr/bin/php${PHP_RELEASE} php
 
 # CLEAN
