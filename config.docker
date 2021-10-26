@@ -1,0 +1,4 @@
+VENDOR=wyzenrepo
+IMAGE=node14-php-fpm80-cron
+TAG=latest
+SHELL=sh
