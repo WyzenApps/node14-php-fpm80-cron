@@ -16,17 +16,16 @@ COPY config/system/locale.gen /etc/locale.gen
 COPY ./config/system/export_locale.sh /etc/profile.d/05-export_locale.sh
 COPY ./config/php/php.ini /usr/local/etc/php/php.ini
 
-RUN apt update && apt install -y libfreetype6-dev \
+RUN apt update && apt dist-upgrade -y && apt install -y curl wget git sudo locales vim unzip \
+	libfreetype6-dev \
 	libjpeg62-turbo-dev \
-	libpng-dev && \
-	apt -y --no-install-recommends dist-upgrade
+	libpng-dev
 
 RUN cd /tmp \
 	&& groupadd -f --system --gid 33 www-data \
 	&& mkdir -p $APPDIR \
 	&& usermod -u 33 -g 33 -d $APPDIR www-data \
 	&& chown www-data:www-data $APPDIR \
-	&& apt install -y --no-install-recommends curl wget git sudo locales vim unzip \
 	&& locale-gen $LOCALE && update-locale LANGUAGE=${LOCALE} LC_ALL=${LOCALE} LANG=${LOCALE} LC_CTYPE=${LOCALE}\
 	&& ln -sf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime \
 	&& . /etc/default/locale
@@ -41,13 +40,16 @@ RUN apt install -y zlib1g zlib1g-dev libfreetype6-dev libjpeg62-turbo-dev libpng
 	libldap2-dev \
 	libpq-dev \
 	libicu-dev \
+	libzip-dev \
 	&& docker-php-ext-configure gd --with-freetype --with-jpeg \
 	&& docker-php-ext-install -j$(nproc) \
 	gd \
+	calendar \
 	ldap \
 	pdo_pgsql \
 	pdo_mysql \
-	intl
+	intl \
+	zip
 
 # CLEAN
 RUN apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*

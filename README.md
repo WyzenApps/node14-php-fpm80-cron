@@ -2,6 +2,10 @@
 
 Image: PHP-FPM 8.1
 
+## Changelog
+
+- add module calendar
+
 ## PHP-FPM
 
 Port 9000
@@ -10,6 +14,7 @@ Port 9000
 
 ```
 [PHP Modules]
+calendar
 Core
 ctype
 curl
@@ -47,5 +52,6 @@ tokenizer
 xml
 xmlreader
 xmlwriter
+zip
 zlib
 ```
